@@ -13,6 +13,9 @@ func main() {
 		case "-s":
 			synonyms()
 			break
+		case "-c":
+			check()
+			break
 		default:
 			definition()
 			break
@@ -46,6 +49,16 @@ func definition() {
 	content := scrap(url, "pre")
 	for _, word := range content {
 		fmt.Printf("\n%[1]s\n\n", word)
+	}
+	return
+}
+
+func check() {
+	query := strings.Join(os.Args[2:], "+")
+	url := fmt.Sprintf("https://www.google.com/search?&q=%[1]s", query)
+	content := scrap(url, "i")
+	for _, word := range content {
+		fmt.Println(word)
 	}
 	return
 }
