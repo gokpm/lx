@@ -34,7 +34,7 @@ func scrap(url string, selector string) (elements []string) {
 }
 
 func synonyms() {
-	query := strings.Join(os.Args[2:], "+")
+	query := correct(strings.Join(os.Args[2:], "+"))
 	url := fmt.Sprintf("https://www.thesaurus.com/browse/%[1]s", query)
 	content := scrap(url, "a.css-1n6g4vv.eh475bn0")
 	for _, word := range content {
@@ -44,7 +44,7 @@ func synonyms() {
 }
 
 func definition() {
-	query := strings.Join(os.Args[1:], "+")
+	query := correct(strings.Join(os.Args[1:], "+"))
 	url := fmt.Sprintf("https://gcide.gnu.org.ua/?q=%[1]s&db=gcide&define=1", query)
 	content := scrap(url, "pre")
 	for _, word := range content {
@@ -54,11 +54,15 @@ func definition() {
 }
 
 func check() {
-	query := strings.Join(os.Args[2:], "+")
-	url := fmt.Sprintf("https://www.google.com/search?&q=%[1]s", query)
+	query := correct(strings.Join(os.Args[2:], "+"))
+	fmt.Println(query)
+}
+
+func correct(word string) string {
+	url := fmt.Sprintf("https://www.google.com/search?&q=%[1]s", word)
 	content := scrap(url, "i")
-	for _, word := range content {
-		fmt.Println(word)
+	if len(content) > 0 {
+		word = content[0]
 	}
-	return
+	return word
 }
